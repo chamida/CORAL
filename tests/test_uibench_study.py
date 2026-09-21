@@ -165,6 +165,15 @@ def test_yoke_schedules_are_hash_bound_checkpoint_schedules(task):
     assert sched["schedule_sha256"] == digest, "schedule body does not match its hash"
 
 
+@pytest.mark.parametrize("name", sorted(CONFIGS))
+def test_config_dirs_carry_the_seed_symlink(name):
+    """workspace.repo_path resolves against the working directory; the seed
+    symlink beside task.yaml is what CORAL copies into the run repo."""
+    link = UIBENCH / name / "seed"
+    assert link.is_symlink() and (link / "index.html").is_file()
+    assert link.resolve() == (REPO / "examples" / "frontend-eval" / "seed").resolve()
+
+
 def test_yoked_configs_point_at_their_adaptive_twin_schedule():
     for task, fname in SCHEDULES.items():
         cfg = yaml.safe_load((UIBENCH / f"{task}_yoked" / "task.yaml").read_text())

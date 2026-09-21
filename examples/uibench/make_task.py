@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import os
 import sys
 import urllib.error
 import urllib.parse
@@ -338,6 +339,14 @@ def main() -> int:
     out = a.out or HERE / (a.name or f"{a.id:02d}_{a.arm}") / "task.yaml"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(text)
+    if a.out is None:
+        # CORAL resolves workspace.repo_path against the working directory but
+        # copies <config dir>/seed into the run repo whenever it exists, so the
+        # symlink is what makes the config work from any working directory.
+        link = out.parent / "seed"
+        if link.is_symlink() or link.exists():
+            link.unlink()
+        link.symlink_to(os.path.relpath(HERE.parent / "frontend-eval" / "seed", out.parent))
     print(f"wrote {out}")
     return 0
 
