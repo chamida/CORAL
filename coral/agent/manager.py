@@ -2606,7 +2606,6 @@ class AgentManager:
                     exit_code = handle.process.returncode if handle.process else None
                     log_path = handle.log_path
 
-
                     # Classify the exit. Only non-clean exits feed the breaker;
                     # clean `max_turns`-style completions never trip it.
                     classification = self._classify_agent_exit(agent_id, log_path, exit_code)

@@ -84,4 +84,6 @@ def test_every_manager_prompt_path_routes_through_one_recorder():
     start = inspect.getsource(manager.AgentManager._setup_and_start_agent)
     assert "_record_prompt_dispatch(" in start
     for name in ("_restart_agent", "_interrupt_and_resume"):
-        assert "_record_prompt_dispatch(" not in inspect.getsource(getattr(manager.AgentManager, name))
+        assert "_record_prompt_dispatch(" not in inspect.getsource(
+            getattr(manager.AgentManager, name)
+        )
